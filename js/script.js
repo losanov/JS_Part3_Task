@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     // Timer
 
-    let deadLine = '2020-04-01';
+    let deadLine = '2020-04-03';
 
     function getTimeRemainng(endtime) {
         let t = Date.parse(endtime) - Date.parse(new Date()),
@@ -45,15 +45,15 @@ window.addEventListener('DOMContentLoaded', function () {
             minutes = Math.floor((t / 1000 / 60) % 60),
             hours = Math.floor((t / (1000 * 60 * 60)));
 
-            return {
-                'total' : t,
-                'hours' : hours,
-                'minutes' : minutes,
-                'seconds' : seconds
-            };
+        return {
+            'total': t,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
     }
 
-    
+
 
     function setClock(id, endtime) {
         let timer = document.getElementById(id),
@@ -62,15 +62,15 @@ window.addEventListener('DOMContentLoaded', function () {
             seconds = timer.querySelector('.seconds'),
             timeInterval = setInterval(updateClock, 1000);
 
-        function addZero (num) {
-            if (num < 10 ) {
+        function addZero(num) {
+            if (num < 10) {
                 return '0' + num;
             } else {
                 return num;
             }
         }
 
-        function updateClock () {
+        function updateClock() {
             let t = getTimeRemainng(endtime);
             hours.textContent = addZero(t.hours);
             minutes.textContent = addZero(t.minutes);
@@ -87,5 +87,44 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     setClock('timer', deadLine);
-    
+
+    // Modal
+
+    let more = document.querySelector('.more'),
+        overlay = document.querySelector('.overlay'),
+        close = document.querySelector('.popup-close');
+
+    more.addEventListener('click', function () {
+        overlay.style.display = 'block';
+        this.classList.add('more-splash');
+        document.body.style.overflow = 'hidden';
+    });
+
+    close.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        more.classList.remove('more-splash');
+        document.body.style.overflow = '';
+    });
+
+    class Options {
+        constructor(height, width, bg, fontSize, textAlign) {
+            this.height = height;
+            this.width = width;
+            this.bg = bg;
+            this.fontSize = fontSize;
+            this.textAlign = textAlign;
+        }
+        addDiv(writeText) {
+            let newDiv = document.createElement('div');
+                //newDiv.innerHTML = `<h1>${writeText}</h1>`;
+                newDiv.style.cssText = `height:${this.height}; width:${this.width}; background:${this.bg}; font-size: ${this.fontSize}; text-align: ${this.textAlign};`;
+            document.body.appendChild(newDiv);
+        }
+    }
+
+    const newBlock = new Options('400px', '600px', 'green', '30px', 'center');
+
+    newBlock.addDiv('all Correct');
+
+
 });
