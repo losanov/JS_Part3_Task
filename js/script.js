@@ -106,25 +106,86 @@ window.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     });
 
-    class Options {
-        constructor(height, width, bg, fontSize, textAlign) {
-            this.height = height;
-            this.width = width;
-            this.bg = bg;
-            this.fontSize = fontSize;
-            this.textAlign = textAlign;
-        }
-        addDiv(writeText) {
-            let newDiv = document.createElement('div');
-                //newDiv.innerHTML = `<h1>${writeText}</h1>`;
-                newDiv.style.cssText = `height:${this.height}; width:${this.width}; background:${this.bg}; font-size: ${this.fontSize}; text-align: ${this.textAlign};`;
-            document.body.appendChild(newDiv);
-        }
+    // class Options {
+    //     constructor(height, width, bg, fontSize, textAlign) {
+    //         this.height = height;
+    //         this.width = width;
+    //         this.bg = bg;
+    //         this.fontSize = fontSize;
+    //         this.textAlign = textAlign;
+    //     }
+    //     addDiv(writeText) {
+    //         let newDiv = document.createElement('div');
+    //         newDiv.innerHTML = `<h1>${writeText}</h1>`;
+    //         newDiv.style.cssText = `height:${this.height}; width:${this.width}; background:${this.bg}; font-size: ${this.fontSize}; text-align: ${this.textAlign};`;
+    //         document.body.appendChild(newDiv);
+    //     }
+    // }
+
+    // const newBlock = new Options('400px', '600px', 'green', '30px', 'center');
+
+    // newBlock.addDiv('all Correct');
+
+    //Form
+    let message = {
+        loading: 'Загрузка...',
+        success: 'Спасибо. Мы с вами скоро свяжемся',
+        failture: 'Что-то пошло не так...'
+    };
+
+    let form = document.querySelector('.main-form'),
+        formContact = document.querySelector('#form'),
+        input = document.getElementsByTagName('input'),
+        stasusMessage = document.createElement('div');
+
+    stasusMessage.classList.add('status');
+
+    function requestForm (data) {
+        data.addEventListener('submit', (event) => {
+            event.preventDefault();
+            data.appendChild(stasusMessage);
+    
+            let request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    
+            let formData = new FormData(data);
+    
+            let obj = {};
+            formData.forEach(function(value, key) {
+                obj[key] = value;
+            });
+            let json = JSON.stringify(obj);
+    
+            request.send(json);
+    
+            request.addEventListener('readystatechange', function () {
+                if (request.readyState < 4) {
+                    stasusMessage.innerHTML = message.loading;
+                } else if (request.readyState === 4 && request.status == 200) {
+                    stasusMessage.innerHTML = message.success;
+                } else {
+                    stasusMessage.innerHTML = message.failture;
+                }
+            });
+    
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
+            }  
+        });
+       
+      
     }
-
-    const newBlock = new Options('400px', '600px', 'green', '30px', 'center');
-
-    newBlock.addDiv('all Correct');
-
+   
+    requestForm (form);
+    requestForm (formContact);
+    
+    
 
 });
+
+
+
+
+
+
