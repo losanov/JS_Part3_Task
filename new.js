@@ -54,4 +54,46 @@
 
 
 
+function requestForm (data) {
+        data.addEventListener('submit', (event) => {
+            event.preventDefault();
+            data.appendChild(stasusMessage);
+    
+            let request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    
+            let formData = new FormData(data);
+    
+            let obj = {};
+            formData.forEach(function(value, key) {
+                obj[key] = value;
+            });
+            let json = JSON.stringify(obj);
+    
+            request.send(json);
+    
+            request.addEventListener('readystatechange', function () {
+                if (request.readyState < 4) {
+                    stasusMessage.innerHTML = message.loading;
+                } else if (request.readyState === 4 && request.status == 200) {
+                    stasusMessage.innerHTML = message.success;
+                } else {
+                    stasusMessage.innerHTML = message.failture;
+                }
+            });
+    
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
+            }  
+        });
+       
+      
+    }
+   
+    requestForm (form);
+    requestForm (formContact);
+
+
+
 
